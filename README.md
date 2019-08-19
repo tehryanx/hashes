@@ -2,8 +2,11 @@
 Quickly dump a bunch of different hash digests for a given string
 
 ### Usage:
-
-    $ hashes.py this is a test
+    $ python hashes.py --help
+    USAGE: hashes [-b] string
+    -------------------------
+     -b will base64 encode the string before hashing it
+    $ python hashes.py this is a test
     sha3-512 	a68bf14c14f2f81a3ed31a849cc104555834af7dd7cc586829debd330641d9f799d5f261201a54802157f40aa3435b495f2f060831c28edd79cf0bf43938a3ac
     shake128 	1e5c3709a40f1f26e7a61602842faa33
     sha3-384 	717c45d6c27403250d24e632bea215668ba2f217fbbafe927160245b78d16ca0bd3cd7c3e9e322af99b5b5689635f40b
@@ -25,3 +28,6 @@ Quickly dump a bunch of different hash digests for a given string
     sha512 		7d0a8468ed220400c0b8e6f335baa7e070ce880a37e2ac5995b9a97b809026de626da636ac7365249bb974c719edf543b52ed286646f437dc7f810cc2068375c
     ripemd160 	57365db6dde0b8f4214314fa09b587baf1b339f8
     whirlpool 	13af17f8b3e8310dee7864d0b0539d632750f88cd80264a1bfd3904ddf55790ec94ba963d871d8412cd1bddf6c5a37b1189f77e94904c6f3ea6417ad1269dbf6
+    crc32 		0xd1ee7ea
+    adler32 	0x26330516
+    base64 		dGhpcyBpcyBhIHRlc3Q=
