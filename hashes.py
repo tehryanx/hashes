@@ -1,3 +1,5 @@
+#!/bin/python
+
 import hashlib, zlib, base64
 import sys
 
