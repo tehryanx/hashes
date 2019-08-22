@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/env python
 
 import hashlib, zlib, base64
 import sys
