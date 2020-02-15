@@ -1,45 +1,51 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-import hashlib, zlib, base64
+import hashlib, zlib, base64, binascii
+import inspect
 import sys
+import argparse
 
-if len(sys.argv) < 2 or sys.argv[1] == '-h' or sys.argv[1] == '--help':
-  print "USAGE: hashes [-b] string"
-  print "-------------------------"
-  print " -b will base64 encode the string before hashing it"
-  print " -bu will do the same using the urlsafe charset"
-  exit()
-clear = "" # clear stores the cleartext string
+parser = argparse.ArgumentParser()
+parser.add_argument("string", help="The string you'd like to see results for")
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-b", "--b64", help="Base64 encode the string before hashing", action="store_true")
+group.add_argument("-bu", "--urlsafeb64", help="Base64 encode the string using the urlsafe charset before hashing", action="store_true")
+args = parser.parse_args()
 
-# probably should use a cli argument library. oops.
-string_pos = 2 if sys.argv[1] == '-b' or sys.argv[1] == '-bu' else 1
-
-# parse cli for our string
-for i in range(0, len(sys.argv)):
-  if i>=string_pos:
-    clear += " " + sys.argv[i]
-clear = clear.strip()
+clear = args.string # clear stores the cleartext string
 
 # if b is set b64 encode the string
-if sys.argv[1] == '-b':
+if args.b64:
         clear = base64.b64encode(clear)
-elif sys.argv[1] == '-bu':
+elif args.urlsafeb64:
         clear = base64.urlsafe_b64encode(clear)
 
 # loop through all digests available in hashlib
+clear = clear.encode('utf-8')
+
 for i in hashlib.algorithms_available:
     tab = "\t\t" if len(i)<7 else "\t"
     h = hashlib.new(i)
     h.update(clear)
-    print i, tab, h.hexdigest()
+    try:
+        print (i, tab, h.hexdigest())
+    except:
+        print (i+" 16", tab, h.hexdigest(16))
+        print (i+" 32", tab, h.hexdigest(32))
+        print (i+" 64", tab, h.hexdigest(64))
+
+
+# Hex stream
+print("Hex stream", "\t", binascii.hexlify(clear))
 
 # adler32 and crc32 from zlib
-print "crc32 signed", "\t", hex(zlib.crc32(clear))
 # bitwise and with ffffffff to convert to unsigned int
-print "crc32 unsigned", "\t", hex(zlib.crc32(clear) & 0xffffffff)
-print "adler32 signed", "\t", hex(zlib.adler32(clear))
-print "adler32 unsign", "\t", hex(zlib.adler32(clear) & 0xffffffff)
+print ("crc32 signed", "\t", hex(zlib.crc32(clear)))
+print ("crc32 unsigned", "\t", hex(zlib.crc32(clear) & 0xffffffff))
+print ("adler32 signed", "\t", hex(zlib.adler32(clear)))
+print ("adler32 unsign", "\t", hex(zlib.adler32(clear) & 0xffffffff))
 
-print "base32", "\t\t", base64.b32encode(clear)
-print "base64", "\t\t", base64.b64encode(clear)
-print "base64 urlsafe", "\t", base64.urlsafe_b64encode(clear)
+
+print ("base32", "\t\t", base64.b32encode(clear))
+print ("base64", "\t\t", base64.b64encode(clear))
+print ("base64 urlsafe", "\t", base64.urlsafe_b64encode(clear))
